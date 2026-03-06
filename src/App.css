@@ -1,0 +1,284 @@
+/* App-specific styles for dark theme */
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid hsl(330 80% 55%);
+  outline-offset: 2px;
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(0 0% 10%);
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(330 80% 55% / 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(330 80% 55% / 0.7);
+}
+
+/* Background grid pattern */
+.bg-grid-pattern {
+  background-image: linear-gradient(rgba(236, 72, 153, 0.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(236, 72, 153, 0.5) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+/* Slider utility classes */
+.translate-slide-0 {
+  transform: translateX(0);
+}
+
+.translate-slide-1 {
+  transform: translateX(-100%);
+}
+
+.translate-slide-2 {
+  transform: translateX(-200%);
+}
+
+.translate-slide-3 {
+  transform: translateX(-300%);
+}
+
+.translate-slide-4 {
+  transform: translateX(-400%);
+}
+
+.translate-slide-5 {
+  transform: translateX(-500%);
+}
+
+/* Random particles positions */
+.particle-pos-0 {
+  left: 15%;
+  top: 85%;
+}
+
+.particle-pos-1 {
+  left: 45%;
+  top: 92%;
+}
+
+.particle-pos-2 {
+  left: 75%;
+  top: 81%;
+}
+
+.particle-pos-3 {
+  left: 25%;
+  top: 95%;
+}
+
+.particle-pos-4 {
+  left: 85%;
+  top: 88%;
+}
+
+.particle-pos-5 {
+  left: 55%;
+  top: 83%;
+}
+
+.particle-pos-6 {
+  left: 35%;
+  top: 87%;
+}
+
+.particle-pos-7 {
+  left: 65%;
+  top: 90%;
+}
+
+.particle-pos-8 {
+  left: 5%;
+  top: 94%;
+}
+
+.particle-pos-9 {
+  left: 95%;
+  top: 82%;
+}
+
+.particle-pos-10 {
+  left: 20%;
+  top: 80%;
+}
+
+.particle-pos-11 {
+  left: 50%;
+  top: 89%;
+}
+
+.particle-pos-12 {
+  left: 80%;
+  top: 96%;
+}
+
+.particle-pos-13 {
+  left: 10%;
+  top: 84%;
+}
+
+.particle-pos-14 {
+  left: 40%;
+  top: 91%;
+}
+
+.particle-pos-15 {
+  left: 70%;
+  top: 98%;
+}
+
+.particle-pos-16 {
+  left: 30%;
+  top: 93%;
+}
+
+.particle-pos-17 {
+  left: 60%;
+  top: 86%;
+}
+
+.particle-pos-18 {
+  left: 90%;
+  top: 97%;
+}
+
+.particle-pos-19 {
+  left: 50%;
+  top: 99%;
+}
+
+/* Image hover zoom effect */
+.image-zoom {
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.image-zoom:hover {
+  transform: scale(1.05);
+}
+
+/* Card hover lift effect */
+.card-lift {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.5s ease;
+}
+
+.card-lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+}
+
+/* Gradient border effect */
+.gradient-border {
+  position: relative;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(135deg, hsl(330 80% 55%), hsl(330 70% 70%));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* Text shimmer effect */
+@keyframes text-shimmer {
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.text-shimmer {
+  background: linear-gradient(90deg,
+      hsl(330 80% 55%) 0%,
+      hsl(330 70% 70%) 25%,
+      hsl(330 80% 55%) 50%,
+      hsl(330 70% 70%) 75%,
+      hsl(330 80% 55%) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: text-shimmer 3s linear infinite;
+}
+
+/* Glow effect */
+.glow {
+  box-shadow: 0 0 20px hsl(330 80% 55% / 0.3);
+}
+
+.glow-strong {
+  box-shadow: 0 0 40px hsl(330 80% 55% / 0.5);
+}
+
+/* Underline animation */
+.underline-animation {
+  position: relative;
+}
+
+.underline-animation::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, hsl(330 80% 55%), hsl(330 70% 70%));
+  transition: width 0.3s ease;
+}
+
+.underline-animation:hover::after {
+  width: 100%;
+}
+
+/* Magnetic button effect placeholder */
+.magnetic-button {
+  transition: transform 0.2s ease-out;
+}
+
+/* Parallax layer */
+.parallax-layer {
+  will-change: transform;
+}
+
+/* Smooth image loading */
+img {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+img[data-loading="true"] {
+  opacity: 0;
+}
+
+/* Custom input autofill styling */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: white;
+  -webkit-box-shadow: 0 0 0px 1000px hsl(0 0% 10%) inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
