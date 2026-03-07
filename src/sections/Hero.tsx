@@ -103,8 +103,20 @@ export default function Hero() {
       ref={heroRef}
       className="relative min-h-screen flex items-center bg-[#0a0a0a] overflow-hidden pt-20"
     >
+      {/* Video Background */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover z-0 opacity-60"
+      >
+        <source src="./hero-video.mp4" type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-[#0a0a0a]/70 z-0 pointer-events-none" />
+
       {/* Animated particles */}
-      <div ref={particlesRef} className="absolute inset-0 pointer-events-none overflow-hidden">
+      <div ref={particlesRef} className="absolute inset-0 pointer-events-none overflow-hidden z-0">
         {[...Array(20)].map((_, i) => (
           <div
             key={i}

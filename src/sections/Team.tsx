@@ -82,6 +82,18 @@ export default function Team() {
       ref={sectionRef}
       className="py-16 sm:py-24 lg:py-32 bg-[#0a0a0a] relative overflow-hidden"
     >
+      {/* Video Background */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover z-0 opacity-40"
+      >
+        <source src="./team-video.mp4" type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-[#0a0a0a]/80 z-0 pointer-events-none" />
+
       {/* Background gradient */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 right-0 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-pink-500/5 rounded-full blur-[200px]" />

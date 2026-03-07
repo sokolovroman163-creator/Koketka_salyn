@@ -1,68 +1,44 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { CheckCircle, Send, MapPin, Phone } from 'lucide-react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { MapPin, Phone, ArrowUpRight } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const services = [
-  'Макияж',
-  'Наращивание ресниц',
-  'Косметология',
-  'Парикмахерские услуги',
-  'Маникюр',
-  'Другое',
-];
-
 export default function Booking() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    email: '',
-    service: '',
-    message: '',
-  });
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.fromTo(
-        '.booking-content',
-        { opacity: 0, x: -50 },
+        '.booking-card',
+        { opacity: 0, scale: 0.95, y: 30 },
         {
           opacity: 1,
-          x: 0,
+          scale: 1,
+          y: 0,
           duration: 0.8,
           ease: 'power3.out',
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: 'top 70%',
+            start: 'top 75%',
           },
         }
       );
 
       gsap.fromTo(
-        '.booking-image',
-        { opacity: 0, x: 50 },
+        '.booking-element',
+        { opacity: 0, y: 20 },
         {
           opacity: 1,
-          x: 0,
-          duration: 0.8,
+          y: 0,
+          duration: 0.6,
           ease: 'power3.out',
+          stagger: 0.1,
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: 'top 70%',
+            start: 'top 75%',
           },
         }
       );
@@ -71,196 +47,104 @@ export default function Booking() {
     return () => ctx.revert();
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setShowSuccess(true);
-    setFormData({
-      name: '',
-      phone: '',
-      email: '',
-      service: '',
-      message: '',
-    });
-  };
-
   return (
     <section
       id="booking"
       ref={sectionRef}
-      className="py-16 sm:py-24 lg:py-32 bg-[#0a0a0a] relative overflow-hidden"
+      className="py-20 sm:py-32 bg-[#0a0a0a] relative overflow-hidden"
     >
-      {/* Background gradient */}
-      <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-        <div className="absolute top-1/2 right-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-pink-500/5 rounded-full blur-[150px]" />
+      {/* Video Background */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover z-0 opacity-50"
+      >
+        <source src="./booking-video.mp4" type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-[#0a0a0a]/80 z-0 pointer-events-none" />
+
+      {/* Background elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[600px] h-[300px] sm:h-[600px] bg-pink-500/10 rounded-full blur-[150px]" />
+        <div className="absolute inset-0 opacity-[0.02] bg-grid-pattern" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-stretch">
-          {/* Left - Form */}
-          <div className="booking-content">
-            <div className="bg-gradient-to-br from-pink-500 to-pink-600 rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 relative overflow-hidden">
-              {/* Decorative circles */}
-              <div className="absolute top-0 right-0 w-28 sm:w-40 h-28 sm:h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
-              <div className="absolute bottom-0 left-0 w-16 sm:w-24 h-16 sm:h-24 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2" />
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        <div className="booking-card bg-gradient-to-b from-[#151515] to-[#0a0a0a] border border-white/10 rounded-3xl sm:rounded-[40px] p-8 sm:p-16 lg:p-20 relative overflow-hidden shadow-2xl">
+          {/* Decorative glowing orbits */}
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] border border-pink-500/20 rounded-full translate-x-1/2 -translate-y-1/2" />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] border border-purple-500/20 rounded-full -translate-x-1/2 translate-y-1/2" />
 
-              <div className="relative z-10">
-                <h3 className="font-display text-xl sm:text-2xl lg:text-3xl text-white mb-3 sm:mb-4">
-                  Запишитесь сейчас и получите скидку 20% на первое посещение
-                </h3>
-                <p className="text-white/70 text-xs sm:text-sm mb-6 sm:mb-8">
-                  Оставьте свои данные и мы перезвоним вам
-                </p>
+          <div className="relative z-10 flex flex-col items-center">
+            <span className="booking-element inline-block text-pink-500 text-xs sm:text-sm font-medium tracking-wider uppercase mb-4">
+              Ждем вас
+            </span>
 
-                <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
-                  <div>
-                    <Input
-                      placeholder="Имя"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      required
-                      className="h-11 sm:h-12 bg-white/10 border-white/20 text-white placeholder:text-white/50 rounded-xl focus:border-white/40 focus:ring-0 text-sm sm:text-base"
-                    />
-                  </div>
+            <h2 className="booking-element font-display text-4xl sm:text-5xl lg:text-7xl font-medium text-white mb-6 leading-tight">
+              Готовы к <br className="hidden sm:block" />
+              <span className="text-gradient">преображению?</span>
+            </h2>
 
-                  <div>
-                    <Input
-                      type="tel"
-                      placeholder="Телефон"
-                      value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      required
-                      className="h-11 sm:h-12 bg-white/10 border-white/20 text-white placeholder:text-white/50 rounded-xl focus:border-white/40 focus:ring-0 text-sm sm:text-base"
-                    />
-                  </div>
+            <p className="booking-element text-gray-400 text-base sm:text-lg mb-12 max-w-xl mx-auto">
+              Нажмите кнопку ниже, чтобы выбрать удобное время и любимого мастера онлайн. Быстро и без звонков.
+            </p>
 
-                  <div>
-                    <Input
-                      type="email"
-                      placeholder="E-mail"
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      className="h-11 sm:h-12 bg-white/10 border-white/20 text-white placeholder:text-white/50 rounded-xl focus:border-white/40 focus:ring-0 text-sm sm:text-base"
-                    />
-                  </div>
+            <div className="booking-element mb-16 relative group inline-block">
+              {/* Button glow effect */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-pink-600 to-purple-600 rounded-full blur opacity-40 group-hover:opacity-100 transition duration-500"></div>
 
-                  <div>
-                    <Select
-                      value={formData.service}
-                      onValueChange={(value) => setFormData({ ...formData, service: value })}
-                    >
-                      <SelectTrigger className="h-11 sm:h-12 bg-white/10 border-white/20 text-white rounded-xl focus:border-white/40 focus:ring-0 [&>span]:text-white/50 text-sm sm:text-base">
-                        <SelectValue placeholder="Услуга" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-[#1a1a1a] border-white/10">
-                        {services.map((service) => (
-                          <SelectItem
-                            key={service}
-                            value={service}
-                            className="text-white hover:bg-pink-500/20 focus:bg-pink-500/20"
-                          >
-                            {service}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
+              <a
+                href="https://mst.link/minina"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative block"
+              >
+                <Button
+                  size="lg"
+                  className="bg-gradient-pink hover:opacity-90 text-white px-8 sm:px-12 py-6 sm:py-8 text-lg sm:text-xl rounded-full shadow-lg transition-transform duration-300 hover:scale-105 min-w-[280px] sm:min-w-[320px] flex items-center justify-center gap-3"
+                >
+                  Записаться онлайн
+                  <ArrowUpRight className="w-5 h-5 sm:w-6 sm:h-6 opacity-70 group-hover:opacity-100 transition-opacity" />
+                </Button>
+              </a>
+            </div>
 
-                  <div>
-                    <textarea
-                      placeholder="Дата и время"
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="w-full h-20 sm:h-24 px-3 sm:px-4 py-2.5 sm:py-3 bg-white/10 border border-white/20 text-white placeholder:text-white/50 rounded-xl focus:border-white/40 focus:outline-none resize-none text-sm sm:text-base"
-                    />
-                  </div>
-
-                  <Button
-                    type="submit"
-                    className="w-full h-11 sm:h-12 bg-white text-pink-600 hover:bg-white/90 rounded-xl font-medium transition-all duration-300 hover:scale-[1.02] text-sm sm:text-base"
-                  >
-                    <Send className="w-4 h-4 mr-2" />
-                    Отправить
-                  </Button>
-
-                  <p className="text-white/50 text-[10px] sm:text-xs text-center">
-                    Нажимая кнопку, вы соглашаетесь с политикой конфиденциальности
+            {/* Contact Info Grid */}
+            <div className="booking-element grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl mx-auto">
+              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-5 border border-white/5 flex items-start text-left gap-4 hover:bg-white/10 transition-colors">
+                <div className="bg-pink-500/10 p-3 rounded-full flex-shrink-0">
+                  <MapPin className="w-5 h-5 text-pink-500" />
+                </div>
+                <div>
+                  <p className="text-white font-medium mb-1">Наш адрес</p>
+                  <p className="text-gray-400 text-sm">
+                    ул. Ленина, 125<br />
+                    Тольятти, 1 этаж
                   </p>
-                </form>
-              </div>
-            </div>
-
-            {/* Contact info */}
-            <div className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-              <div className="bg-[#151515] rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/5">
-                <div className="flex items-start gap-3">
-                  <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-pink-500 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-white font-medium mb-1 text-sm sm:text-base">Адрес</p>
-                    <p className="text-gray-400 text-xs sm:text-sm">
-                      ул. Ленина, 125<br />
-                      Тольятти, 1 этаж
-                    </p>
-                  </div>
                 </div>
               </div>
-              <div className="bg-[#151515] rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-white/5">
-                <div className="flex items-start gap-3">
-                  <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-pink-500 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-white font-medium mb-1 text-sm sm:text-base">Телефоны</p>
-                    <a href="tel:+79920674610" className="text-gray-400 text-xs sm:text-sm hover:text-pink-400 transition-colors block">
-                      +7 (992) 067-46-10
-                    </a>
-                    <a href="tel:+79674929762" className="text-gray-400 text-xs sm:text-sm hover:text-pink-400 transition-colors block">
-                      +7 (967) 492-97-62
-                    </a>
-                  </div>
+
+              <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-5 border border-white/5 flex items-start text-left gap-4 hover:bg-white/10 transition-colors">
+                <div className="bg-pink-500/10 p-3 rounded-full flex-shrink-0">
+                  <Phone className="w-5 h-5 text-pink-500" />
+                </div>
+                <div>
+                  <p className="text-white font-medium mb-1">Свяжитесь с нами</p>
+                  <a href="tel:+79920674610" className="text-gray-400 text-sm hover:text-pink-400 transition-colors block mb-1">
+                    +7 (992) 067-46-10
+                  </a>
+                  <a href="tel:+79674929762" className="text-gray-400 text-sm hover:text-pink-400 transition-colors block">
+                    +7 (967) 492-97-62
+                  </a>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Right - Image */}
-          <div className="booking-image relative rounded-2xl sm:rounded-3xl overflow-hidden">
-            <img
-              src="./images/booking-brushes.jpg"
-              alt="Кисточки для макияжа"
-              className="w-full h-full object-cover min-h-[300px] sm:min-h-[400px] lg:min-h-0"
-              loading="lazy"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-
-            {/* Decorative elements */}
-            <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 right-4 sm:right-6">
-              <div className="bg-black/50 backdrop-blur-sm rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-white/10">
-                <p className="text-white font-display text-lg sm:text-xl">Салон красоты «Кокетка»</p>
-                <p className="text-white/60 text-xs sm:text-sm">Профессиональный уход за вашей красотой</p>
-              </div>
-            </div>
           </div>
         </div>
       </div>
-
-      {/* Success Dialog */}
-      <Dialog open={showSuccess} onOpenChange={setShowSuccess}>
-        <DialogContent className="max-w-[90vw] sm:max-w-md p-6 sm:p-8 text-center bg-[#1a1a1a] border-white/10">
-          <div className="w-14 sm:w-16 h-14 sm:h-16 rounded-full bg-pink-500/20 flex items-center justify-center mx-auto mb-3 sm:mb-4">
-            <CheckCircle className="w-7 sm:w-8 h-7 sm:h-8 text-pink-500" />
-          </div>
-          <h3 className="font-display text-xl sm:text-2xl font-medium text-white mb-2">
-            Заявка отправлена!
-          </h3>
-          <p className="text-gray-400 mb-4 sm:mb-6 text-sm sm:text-base">
-            Спасибо за запись! Мы свяжемся с вами в ближайшее время.
-          </p>
-          <Button
-            onClick={() => setShowSuccess(false)}
-            className="bg-gradient-pink hover:opacity-90 text-white rounded-full px-6 sm:px-8"
-          >
-            Отлично
-          </Button>
-        </DialogContent>
-      </Dialog>
     </section>
   );
 }
