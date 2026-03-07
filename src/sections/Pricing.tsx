@@ -1,56 +1,56 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Check, Scissors, Sparkles, Hand, Heart } from 'lucide-react';
+import { Check, Sparkles, Hand, GraduationCap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const categories = [
-  { id: 'hair', label: 'Волосы', icon: Scissors },
-  { id: 'nails', label: 'Ногти', icon: Hand },
-  { id: 'face', label: 'Лицо', icon: Sparkles },
-  { id: 'body', label: 'Тело', icon: Heart },
+  { id: 'nails', label: 'Ногтевой сервис', icon: Hand },
+  { id: 'pedicure', label: 'Педикюр', icon: Hand },
+  { id: 'brows', label: 'Брови', icon: Sparkles },
+  { id: 'lashes', label: 'Ресницы', icon: Sparkles },
+  { id: 'courses', label: 'Обучение', icon: GraduationCap },
 ];
 
 const services = {
-  hair: [
-    { name: 'Женская стрижка', price: 'от 800 ₽', time: '60 мин' },
-    { name: 'Мужская стрижка', price: 'от 600 ₽', time: '45 мин' },
-    { name: 'Укладка', price: 'от 700 ₽', time: '40 мин' },
-    { name: 'Окрашивание', price: 'от 2500 ₽', time: '120 мин' },
-    { name: 'Мелирование', price: 'от 3000 ₽', time: '150 мин' },
-    { name: 'Ботокс для волос', price: 'от 2000 ₽', time: '90 мин' },
-  ],
   nails: [
-    { name: 'Маникюр классический', price: 'от 700 ₽', time: '60 мин' },
-    { name: 'Маникюр с покрытием', price: 'от 1200 ₽', time: '90 мин' },
-    { name: 'Наращивание ногтей', price: 'от 2000 ₽', time: '120 мин' },
-    { name: 'Коррекция ногтей', price: 'от 1500 ₽', time: '90 мин' },
-    { name: 'Педикюр', price: 'от 1500 ₽', time: '90 мин' },
-    { name: 'Дизайн ногтей', price: 'от 100 ₽', time: '15 мин' },
+    { name: 'Маникюр без покрытия', price: 'от 900 ₽', time: '30 мин' },
+    { name: 'Маникюр + гель-лак', price: 'от 1 700 ₽', time: '60 мин' },
+    { name: 'Маникюр + укрепление + гель-лак', price: 'от 1 900 ₽', time: '60 мин' },
+    { name: 'Наращивание ногтей', price: 'от 2 700 ₽', time: '90 мин' },
+    { name: 'Наращивание ногтей с дизайном', price: 'от 2 800 ₽', time: '90 мин' },
   ],
-  face: [
-    { name: 'Макияж дневной', price: 'от 1500 ₽', time: '60 мин' },
-    { name: 'Макияж вечерний', price: 'от 2500 ₽', time: '90 мин' },
-    { name: 'Наращивание ресниц', price: 'от 1800 ₽', time: '120 мин' },
-    { name: 'Коррекция бровей', price: 'от 500 ₽', time: '30 мин' },
-    { name: 'Окрашивание бровей', price: 'от 400 ₽', time: '20 мин' },
-    { name: 'Чистка лица', price: 'от 2000 ₽', time: '90 мин' },
+  pedicure: [
+    { name: 'Педикюр (пальчики без покрытия)', price: 'от 1 600 ₽', time: '30 мин' },
+    { name: 'Педикюр (пальчики) + гель-лак', price: 'от 1 800 ₽', time: '60 мин' },
+    { name: 'Педикюр без покрытия (полный)', price: 'от 1 800 ₽', time: '60 мин' },
+    { name: 'Smart Педикюр полный + гель-лак', price: 'от 2 000 ₽', time: '60 мин' },
+    { name: 'Педикюр препаратный', price: '+ 200 ₽ к прайсу', time: '30 мин' },
   ],
-  body: [
-    { name: 'Массаж спины', price: 'от 1200 ₽', time: '45 мин' },
-    { name: 'Массаж всего тела', price: 'от 2500 ₽', time: '90 мин' },
-    { name: 'Обёртывание', price: 'от 1800 ₽', time: '60 мин' },
-    { name: 'Скрабирование', price: 'от 1500 ₽', time: '45 мин' },
-    { name: 'SPA-уход', price: 'от 3500 ₽', time: '120 мин' },
-    { name: 'Антицеллюлитный массаж', price: 'от 2000 ₽', time: '60 мин' },
+  brows: [
+    { name: 'Коррекция формы бровей', price: 'от 400 ₽', time: '15 мин' },
+    { name: 'Окрашивание бровей', price: 'от 500 ₽', time: '30 мин' },
+    { name: 'Долговременная укладка бровей', price: 'от 1 000 ₽', time: '30 мин' },
+    { name: 'КОМПЛЕКС «BROW»', price: 'от 1 600 ₽', time: '60 мин' },
+  ],
+  lashes: [
+    { name: 'Наращивание ресниц 2D', price: 'от 1 800 ₽', time: '90 мин' },
+    { name: 'Наращивание ресниц 3D', price: 'от 2 000 ₽', time: '90 мин' },
+    { name: 'Наращивание ресниц 4D', price: 'от 2 100 ₽', time: '90 мин' },
+    { name: 'Наращивание ресниц 5D', price: 'от 2 200 ₽', time: '90 мин' },
+  ],
+  courses: [
+    { name: 'КУРС «BROWS с нуля»', price: 'от 10 000 ₽', time: '6 часов' },
+    { name: 'Курс «Lashечка» (ресницы)', price: 'от 20 000 ₽', time: '12 часов' },
+    { name: 'Курс «IDEAL» (маникюр)', price: 'от 35 000 ₽', time: '12 часов' },
   ],
 };
 
 export default function Pricing() {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const [activeCategory, setActiveCategory] = useState('hair');
+  const [activeCategory, setActiveCategory] = useState('nails');
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -120,8 +120,8 @@ export default function Pricing() {
               key={category.id}
               onClick={() => setActiveCategory(category.id)}
               className={`flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-2.5 sm:py-3 rounded-full text-xs sm:text-sm font-medium transition-all duration-300 ${activeCategory === category.id
-                  ? 'bg-gradient-pink text-white shadow-pink'
-                  : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
+                ? 'bg-gradient-pink text-white shadow-pink'
+                : 'bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white border border-white/10'
                 }`}
             >
               <category.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
