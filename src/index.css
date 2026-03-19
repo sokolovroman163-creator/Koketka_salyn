@@ -146,3 +146,15 @@
   background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }
+
+/* Slider Translates */
+.translate-x-0-pct { transform: translateX(0%); }
+.translate-x--100-pct { transform: translateX(-100%); }
+.translate-x--200-pct { transform: translateX(-200%); }
+.translate-x--300-pct { transform: translateX(-300%); }
+.translate-x--400-pct { transform: translateX(-400%); }
+.translate-x--500-pct { transform: translateX(-500%); }
+.translate-x--600-pct { transform: translateX(-600%); }
+.translate-x--700-pct { transform: translateX(-700%); }
+.translate-x--800-pct { transform: translateX(-800%); }
+.translate-x--900-pct { transform: translateX(-900%); }

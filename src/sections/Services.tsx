@@ -1,45 +1,43 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowRight } from 'lucide-react';
+import { fetchServices } from '@/lib/api';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const services = [
-  {
-    id: 1,
-    title: 'Макияж',
-    image: './images/service-makeup.jpg',
-    size: 'large',
-  },
-  {
-    id: 2,
-    title: 'Наращивание ресниц',
-    image: './images/service-lashes.jpg',
-    size: 'medium',
-  },
-  {
-    id: 3,
-    title: 'Косметология',
-    image: './images/service-cosmetology.jpg',
-    size: 'medium',
-  },
-  {
-    id: 4,
-    title: 'Парикмахерские услуги',
-    image: './images/service-hair.jpg',
-    size: 'large',
-  },
-  {
-    id: 5,
-    title: 'Маникюр',
-    image: './images/service-nails.jpg',
-    size: 'medium',
-  },
+const fallbackServices = [
+  { id: 1, title: 'Макияж', image: './images/service-makeup.jpg' },
+  { id: 2, title: 'Наращивание ресниц', image: './images/service-lashes.jpg' },
+  { id: 3, title: 'Косметология', image: './images/service-cosmetology.jpg' },
+  { id: 4, title: 'Парикмахерские услуги', image: './images/service-hair.jpg' },
+  { id: 5, title: 'Маникюр', image: './images/service-nails.jpg' },
 ];
+
+function resolveImage(src: string) {
+  if (!src) return '';
+  if (src.startsWith('http')) return src;
+  if (src.startsWith('/uploads')) {
+    const base = import.meta.env.DEV ? 'http://localhost:3001' : '';
+    return `${base}${src}`;
+  }
+  // For paths like /images/xxx or ./images/xxx — keep as-is for public folder
+  return src.startsWith('/') ? `.${src}` : src;
+}
 
 export default function Services() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const [services, setServices] = useState(fallbackServices);
+
+  useEffect(() => {
+    fetchServices()
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setServices(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -79,6 +77,26 @@ export default function Services() {
     return () => ctx.revert();
   }, []);
 
+  // Build card render function to avoid repetition
+  const renderCard = (service: typeof services[0], aspectClass: string, isRowSpan?: boolean) => (
+    <div className={`service-card group relative rounded-2xl overflow-hidden cursor-pointer ${isRowSpan ? 'sm:row-span-2' : ''}`}>
+      <div className={aspectClass}>
+        <img
+          src={resolveImage(service.image)}
+          alt={service.title}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          loading="lazy"
+        />
+      </div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
+        <h3 className={`font-display ${isRowSpan ? 'text-xl sm:text-2xl' : 'text-lg sm:text-xl'} text-white mb-2`}>{service.title}</h3>
+        <div className="h-0.5 w-0 bg-pink-500 group-hover:w-16 transition-all duration-500" />
+      </div>
+      <div className="absolute inset-0 border-2 border-pink-500/0 group-hover:border-pink-500/50 rounded-2xl transition-colors duration-500" />
+    </div>
+  );
+
   return (
     <section
       id="services"
@@ -99,91 +117,11 @@ export default function Services() {
         {/* Services grid - masonry style */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* First column — tall card */}
-          <div className="service-card group relative rounded-2xl overflow-hidden cursor-pointer sm:row-span-2">
-            <div className="aspect-[3/4] sm:aspect-auto sm:h-full">
-              <img
-                src={services[0].image}
-                alt={services[0].title}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                loading="lazy"
-              />
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
-              <h3 className="font-display text-xl sm:text-2xl text-white mb-2">{services[0].title}</h3>
-              <div className="h-0.5 w-0 bg-pink-500 group-hover:w-16 transition-all duration-500" />
-            </div>
-            <div className="absolute inset-0 border-2 border-pink-500/0 group-hover:border-pink-500/50 rounded-2xl transition-colors duration-500" />
-          </div>
-
-          <div className="service-card group relative rounded-2xl overflow-hidden cursor-pointer">
-            <div className="aspect-[4/3]">
-              <img
-                src={services[1].image}
-                alt={services[1].title}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                loading="lazy"
-              />
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
-              <h3 className="font-display text-lg sm:text-xl text-white mb-2">{services[1].title}</h3>
-              <div className="h-0.5 w-0 bg-pink-500 group-hover:w-16 transition-all duration-500" />
-            </div>
-            <div className="absolute inset-0 border-2 border-pink-500/0 group-hover:border-pink-500/50 rounded-2xl transition-colors duration-500" />
-          </div>
-
-          <div className="service-card group relative rounded-2xl overflow-hidden cursor-pointer">
-            <div className="aspect-[4/3]">
-              <img
-                src={services[2].image}
-                alt={services[2].title}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                loading="lazy"
-              />
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
-              <h3 className="font-display text-lg sm:text-xl text-white mb-2">{services[2].title}</h3>
-              <div className="h-0.5 w-0 bg-pink-500 group-hover:w-16 transition-all duration-500" />
-            </div>
-            <div className="absolute inset-0 border-2 border-pink-500/0 group-hover:border-pink-500/50 rounded-2xl transition-colors duration-500" />
-          </div>
-
-          {/* Second row */}
-          <div className="service-card group relative rounded-2xl overflow-hidden cursor-pointer">
-            <div className="aspect-[4/3]">
-              <img
-                src={services[3].image}
-                alt={services[3].title}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                loading="lazy"
-              />
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
-              <h3 className="font-display text-lg sm:text-xl text-white mb-2">{services[3].title}</h3>
-              <div className="h-0.5 w-0 bg-pink-500 group-hover:w-16 transition-all duration-500" />
-            </div>
-            <div className="absolute inset-0 border-2 border-pink-500/0 group-hover:border-pink-500/50 rounded-2xl transition-colors duration-500" />
-          </div>
-
-          <div className="service-card group relative rounded-2xl overflow-hidden cursor-pointer">
-            <div className="aspect-[4/3]">
-              <img
-                src={services[4].image}
-                alt={services[4].title}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                loading="lazy"
-              />
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6">
-              <h3 className="font-display text-lg sm:text-xl text-white mb-2">{services[4].title}</h3>
-              <div className="h-0.5 w-0 bg-pink-500 group-hover:w-16 transition-all duration-500" />
-            </div>
-            <div className="absolute inset-0 border-2 border-pink-500/0 group-hover:border-pink-500/50 rounded-2xl transition-colors duration-500" />
-          </div>
+          {services[0] && renderCard(services[0], 'aspect-[3/4] sm:aspect-auto sm:h-full', true)}
+          {services[1] && renderCard(services[1], 'aspect-[4/3]')}
+          {services[2] && renderCard(services[2], 'aspect-[4/3]')}
+          {services[3] && renderCard(services[3], 'aspect-[4/3]')}
+          {services[4] && renderCard(services[4], 'aspect-[4/3]')}
 
           {/* CTA card */}
           <div

@@ -2,10 +2,11 @@ import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Star, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
+import { fetchTestimonials } from '@/lib/api';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const testimonials = [
+const fallbackTestimonials = [
   {
     id: 1,
     name: 'Марина С.',
@@ -29,6 +30,17 @@ const testimonials = [
 export default function Testimonials() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [testimonials, setTestimonials] = useState(fallbackTestimonials);
+
+  useEffect(() => {
+    fetchTestimonials()
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setTestimonials(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -99,7 +111,7 @@ export default function Testimonials() {
         <div className="relative max-w-4xl mx-auto px-6 sm:px-12">
           <div className="overflow-hidden">
             <div
-              className={`flex transition-transform duration-500 ease-out translate-slide-${currentIndex}`}
+              className={`flex transition-transform duration-500 ease-out translate-x--${currentIndex * 100}-pct`}
             >
               {testimonials.map((testimonial) => (
                 <div

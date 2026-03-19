@@ -1,3 +1,4 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navigation from './sections/Navigation';
 import Hero from './sections/Hero';
 import Stats from './sections/Stats';
@@ -8,9 +9,10 @@ import Team from './sections/Team';
 import Testimonials from './sections/Testimonials';
 import Booking from './sections/Booking';
 import Footer from './sections/Footer';
+import AdminPanel from './admin/AdminPanel';
 import './App.css';
 
-function App() {
+function LandingPage() {
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       <Navigation />
@@ -26,6 +28,17 @@ function App() {
       </main>
       <Footer />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/admin" element={<AdminPanel />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

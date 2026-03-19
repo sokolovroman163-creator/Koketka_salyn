@@ -1,43 +1,73 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Instagram, Award } from 'lucide-react';
+import { fetchTeam } from '@/lib/api';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const team = [
+const fallbackTeam = [
   {
+    id: 1,
     name: 'Анна',
     role: 'Стилист-парикмахер',
     experience: '8 лет опыта',
     image: './images/master-1.jpg',
     specialty: 'Окрашивание, стрижки',
+    instagram: '',
   },
   {
+    id: 2,
     name: 'Мария',
     role: 'Визажист',
     experience: '6 лет опыта',
     image: './images/master-2.jpg',
     specialty: 'Макияж, брови',
+    instagram: '',
   },
   {
+    id: 3,
     name: 'Анжела',
     role: 'Brow-мастер / Специалист по наращиванию ресниц',
     experience: '10 лет опыта',
     image: './images/brow-lashes.jpg',
     specialty: 'Наращивание ресниц, брови',
+    instagram: '',
   },
   {
+    id: 4,
     name: 'Анжела',
     role: 'Мастер маникюра',
     experience: '10 лет опыта',
     image: './images/nails-master.jpg',
     specialty: 'Маникюр, педикюр',
+    instagram: '',
   },
 ];
 
+function resolveImage(src: string) {
+  if (!src) return '';
+  if (src.startsWith('http')) return src;
+  if (src.startsWith('/uploads')) {
+    const base = import.meta.env.DEV ? 'http://localhost:3001' : '';
+    return `${base}${src}`;
+  }
+  return src.startsWith('/') ? `.${src}` : src;
+}
+
 export default function Team() {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const [team, setTeam] = useState(fallbackTeam);
+
+  useEffect(() => {
+    fetchTeam()
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setTeam(data);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -117,14 +147,14 @@ export default function Team() {
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {team.map((member, index) => (
             <div
-              key={index}
+              key={member.id || index}
               className="team-card group relative"
             >
               <div className="relative rounded-xl sm:rounded-2xl overflow-hidden bg-gradient-to-br from-white/[0.08] to-white/[0.02] border border-white/10 hover:border-pink-500/30 transition-all duration-500">
                 {/* Image */}
                 <div className="aspect-[3/4] overflow-hidden">
                   <img
-                    src={member.image}
+                    src={resolveImage(member.image)}
                     alt={`${member.name} — ${member.role}`}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     loading="lazy"
@@ -148,7 +178,7 @@ export default function Team() {
 
                 {/* Social link */}
                 <a
-                  href="#"
+                  href={member.instagram || '#'}
                   className="absolute top-3 sm:top-4 right-3 sm:right-4 w-8 sm:w-10 h-8 sm:h-10 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300 hover:bg-pink-500"
                   aria-label={`Instagram ${member.name}`}
                   rel="noopener noreferrer"
