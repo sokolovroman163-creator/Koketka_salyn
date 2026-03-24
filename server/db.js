@@ -59,6 +59,7 @@ function getDefaultData() {
       { id: 2, name: 'Екатерина М.', text: 'В студии очень уютно, огромное разнообразие цветов и оттенков. Мастер постоянно пополняет ассортимент новинками. Все стерильно, это для меня главное.', rating: 5, is_active: true },
       { id: 3, name: 'Александра К.', text: 'Удобство «Всё в одном»! Сделала маникюр, педикюр, реснички и брови в одном месте. Приятная атмосфера, легкое общение и любимые сериалы во время процедур.', rating: 5, is_active: true },
     ],
+    gallery: [],
     admin_users: [
       { id: 1, username: 'admin', password_hash: bcrypt.hashSync('koketka2024', 10) },
     ],
@@ -68,6 +69,7 @@ function getDefaultData() {
       services: 5,
       team_members: 4,
       testimonials: 3,
+      gallery: 0,
       admin_users: 1,
     },
   };
@@ -245,6 +247,37 @@ class JsonDB {
 
   deleteTestimonial(id) {
     this.data.testimonials = this.data.testimonials.filter((t) => t.id !== id);
+    this.save();
+  }
+
+  // ---- Gallery ----
+  getGallery(activeOnly = false) {
+    if (!this.data.gallery) this.data.gallery = [];
+    let items = [...this.data.gallery];
+    if (activeOnly) items = items.filter((g) => g.is_active);
+    return items.sort((a, b) => b.id - a.id); // newest first
+  }
+
+  addGalleryItem(data) {
+    if (!this.data.gallery) this.data.gallery = [];
+    const item = { id: this.nextId('gallery'), is_active: true, created_at: new Date().toISOString(), ...data };
+    this.data.gallery.push(item);
+    this.save();
+    return item;
+  }
+
+  updateGalleryItem(id, data) {
+    if (!this.data.gallery) return null;
+    const idx = this.data.gallery.findIndex((g) => g.id === id);
+    if (idx === -1) return null;
+    this.data.gallery[idx] = { ...this.data.gallery[idx], ...data };
+    this.save();
+    return this.data.gallery[idx];
+  }
+
+  deleteGalleryItem(id) {
+    if (!this.data.gallery) return;
+    this.data.gallery = this.data.gallery.filter((g) => g.id !== id);
     this.save();
   }
 

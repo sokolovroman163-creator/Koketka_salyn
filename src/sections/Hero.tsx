@@ -2,10 +2,16 @@ import { useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { gsap } from 'gsap';
 import { Award, Zap, DollarSign, Clock, Star, Users } from 'lucide-react';
+import { useParallax } from '@/hooks/useParallax';
 
 export default function Hero() {
   const heroRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<HTMLDivElement>(null);
+
+  // Parallax on background blobs
+  useParallax(heroRef, '.hero-blob-1', 0.4, 'y');
+  useParallax(heroRef, '.hero-blob-2', 0.25, 'y');
+  useParallax(heroRef, '.hero-image', 0.15, 'y');
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -127,8 +133,8 @@ export default function Hero() {
 
       {/* Background gradient */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 right-1/4 w-[400px] sm:w-[600px] lg:w-[800px] h-[400px] sm:h-[600px] lg:h-[800px] bg-pink-500/10 rounded-full blur-[200px]" />
-        <div className="absolute bottom-1/4 left-1/4 w-[300px] sm:w-[400px] lg:w-[500px] h-[300px] sm:h-[400px] lg:h-[500px] bg-purple-500/[0.08] rounded-full blur-[150px]" />
+        <div className="hero-blob-1 absolute top-1/4 right-1/4 w-[400px] sm:w-[600px] lg:w-[800px] h-[400px] sm:h-[600px] lg:h-[800px] bg-pink-500/10 rounded-full blur-[200px]" />
+        <div className="hero-blob-2 absolute bottom-1/4 left-1/4 w-[300px] sm:w-[400px] lg:w-[500px] h-[300px] sm:h-[400px] lg:h-[500px] bg-purple-500/[0.08] rounded-full blur-[150px]" />
       </div>
 
       {/* Grid pattern */}

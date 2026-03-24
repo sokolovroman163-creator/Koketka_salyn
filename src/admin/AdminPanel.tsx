@@ -7,6 +7,7 @@ import {
   adminServices,
   adminTeam,
   adminTestimonials,
+  adminGallery,
   uploadImage,
   fetchCategories,
   changePassword,
@@ -29,6 +30,7 @@ import {
   Layers,
   Home,
   Key,
+  Camera,
 } from 'lucide-react';
 
 // Image base URL for admin display
@@ -854,6 +856,162 @@ function TestimonialsPanel() {
 }
 
 // =====================
+// GALLERY PANEL
+// =====================
+interface GalleryItem {
+  id: number;
+  image: string;
+  title: string;
+  category: string;
+  is_active: number;
+}
+
+function GalleryPanel() {
+  const [items, setItems] = useState<GalleryItem[]>([]);
+  const [isAdding, setIsAdding] = useState(false);
+  const [newItem, setNewItem] = useState({ title: '', category: '', image: '' });
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editData, setEditData] = useState<Partial<GalleryItem>>({});
+
+  const load = useCallback(async () => {
+    const data = await adminGallery.getAll();
+    setItems(data);
+  }, []);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  const handleAdd = async () => {
+    if (!newItem.image) {
+      alert('Загрузите фото');
+      return;
+    }
+    await adminGallery.create(newItem);
+    setNewItem({ title: '', category: '', image: '' });
+    setIsAdding(false);
+    load();
+  };
+
+  const handleSave = async () => {
+    if (editingId && editData) {
+      await adminGallery.update(editingId, editData);
+      setEditingId(null);
+      load();
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    try {
+      await adminGallery.delete(id);
+      load();
+    } catch {
+      alert('Ошибка удаления');
+    }
+  };
+
+  return (
+    <div className="space-y-3">
+      {/* Gallery grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        {items.map((item) => (
+          <div key={item.id}>
+            {editingId === item.id ? (
+              <EditableRow onSave={handleSave} onDelete={() => handleDelete(item.id)}>
+                <input
+                  value={editData.title || ''}
+                  onChange={(e) => setEditData({ ...editData, title: e.target.value })}
+                  className="w-full bg-[#151515] border border-white/10 rounded-lg px-3 py-2 text-white text-sm mb-2"
+                  placeholder="Название (необяз.)"
+                />
+                <input
+                  value={editData.category || ''}
+                  onChange={(e) => setEditData({ ...editData, category: e.target.value })}
+                  className="w-full bg-[#151515] border border-white/10 rounded-lg px-3 py-2 text-white text-sm mb-2"
+                  placeholder="Категория (необяз.)"
+                />
+                <ImageUpload
+                  currentImage={editData.image || ''}
+                  onUpload={(url) => setEditData({ ...editData, image: url })}
+                />
+              </EditableRow>
+            ) : (
+              <div className="group relative rounded-xl overflow-hidden bg-[#0a0a0a] border border-white/5 hover:border-white/10 transition-colors">
+                {item.image && (
+                  <img
+                    src={item.image.startsWith('/uploads') ? `${IMG_BASE}${item.image}` : item.image.startsWith('/') ? item.image : `/${item.image}`}
+                    alt={item.title || 'Фото'}
+                    className="w-full aspect-square object-cover"
+                  />
+                )}
+                <div className="p-2">
+                  {item.title && <p className="text-white text-xs truncate">{item.title}</p>}
+                  {item.category && <p className="text-gray-500 text-[10px] truncate">{item.category}</p>}
+                </div>
+                {/* Edit/Delete overlay */}
+                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditingId(item.id);
+                      setEditData({ ...item });
+                    }}
+                    className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+                    aria-label="Редактировать"
+                  >
+                    <Edit3 className="w-4 h-4 text-white" />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(item.id);
+                    }}
+                    className="p-2 rounded-lg bg-red-500/20 hover:bg-red-500/30 transition-colors"
+                    aria-label="Удалить"
+                  >
+                    <Trash2 className="w-4 h-4 text-red-400" />
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Add new */}
+      {isAdding ? (
+        <EditableRow onSave={handleAdd} isNew onCancelNew={() => setIsAdding(false)}>
+          <input
+            value={newItem.title}
+            onChange={(e) => setNewItem({ ...newItem, title: e.target.value })}
+            className="w-full bg-[#151515] border border-white/10 rounded-lg px-3 py-2 text-white text-sm mb-2"
+            placeholder="Название работы (необязательно)"
+          />
+          <input
+            value={newItem.category}
+            onChange={(e) => setNewItem({ ...newItem, category: e.target.value })}
+            className="w-full bg-[#151515] border border-white/10 rounded-lg px-3 py-2 text-white text-sm mb-2"
+            placeholder="Категория: Макияж, Маникюр и т.д. (необязательно)"
+          />
+          <ImageUpload
+            currentImage={newItem.image}
+            onUpload={(url) => setNewItem({ ...newItem, image: url })}
+          />
+        </EditableRow>
+      ) : (
+        <button
+          onClick={() => setIsAdding(true)}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-white/5 border border-dashed border-white/10 text-gray-400 hover:text-pink-400 hover:border-pink-500/30 hover:bg-pink-500/5 transition-all text-sm w-full justify-center"
+        >
+          <Plus className="w-4 h-4" />
+          Добавить фото
+        </button>
+      )}
+    </div>
+  );
+}
+
+// =====================
 // SETTINGS PANEL
 // =====================
 function SettingsPanel() {
@@ -963,6 +1121,7 @@ const tabs = [
   { id: 'prices', label: 'Цены', icon: DollarSign },
   { id: 'services', label: 'Услуги', icon: Layers },
   { id: 'team', label: 'Команда', icon: Users },
+  { id: 'gallery', label: 'Галерея', icon: Camera },
   { id: 'testimonials', label: 'Отзывы', icon: Star },
   { id: 'settings', label: 'Настройки', icon: Key },
 ];
@@ -989,6 +1148,31 @@ export default function AdminPanel() {
       setChecking(false);
     }
   }, []);
+
+  // Auto-logout after 30 minutes of inactivity
+  useEffect(() => {
+    if (!isAuth) return;
+    const IDLE_TIMEOUT = 30 * 60 * 1000; // 30 minutes
+    let timer: ReturnType<typeof setTimeout>;
+
+    const resetTimer = () => {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        localStorage.removeItem('admin_token');
+        setIsAuth(false);
+        alert('Сессия истекла. Пожалуйста, войдите снова.');
+      }, IDLE_TIMEOUT);
+    };
+
+    const events = ['mousedown', 'mousemove', 'keydown', 'scroll', 'touchstart', 'click'];
+    events.forEach((event) => window.addEventListener(event, resetTimer, { passive: true }));
+    resetTimer();
+
+    return () => {
+      clearTimeout(timer);
+      events.forEach((event) => window.removeEventListener(event, resetTimer));
+    };
+  }, [isAuth]);
 
   const handleLogout = () => {
     localStorage.removeItem('admin_token');
@@ -1085,6 +1269,7 @@ export default function AdminPanel() {
           {activeTab === 'prices' && <PricesPanel />}
           {activeTab === 'services' && <ServicesPanel />}
           {activeTab === 'team' && <TeamPanel />}
+          {activeTab === 'gallery' && <GalleryPanel />}
           {activeTab === 'testimonials' && <TestimonialsPanel />}
           {activeTab === 'settings' && <SettingsPanel />}
         </div>

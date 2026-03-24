@@ -5,6 +5,7 @@ const navLinks = [
   { label: 'О нас', href: '#about' },
   { label: 'Услуги', href: '#services' },
   { label: 'Цены', href: '#pricing' },
+  { label: 'Галерея', href: '#gallery' },
   { label: 'Отзывы', href: '#testimonials' },
   { label: 'Контакты', href: '#booking' },
 ];

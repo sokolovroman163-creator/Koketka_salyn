@@ -2,12 +2,16 @@ import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowRight } from 'lucide-react';
+import { useParallax } from '@/hooks/useParallax';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function About() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
+
+  useParallax(sectionRef, '.about-blob', 0.35, 'y');
+  useParallax(sectionRef, '.about-img-parallax', 0.2, 'y');
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -70,7 +74,7 @@ export default function About() {
     >
       {/* Background gradient */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-        <div className="absolute top-1/2 left-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-pink-500/5 rounded-full blur-[150px]" />
+        <div className="about-blob absolute top-1/2 left-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-pink-500/5 rounded-full blur-[150px]" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -110,7 +114,7 @@ export default function About() {
           <div className="relative">
             <div
               ref={imageRef}
-              className="relative rounded-2xl overflow-hidden shadow-2xl"
+              className="about-img-parallax relative rounded-2xl overflow-hidden shadow-2xl"
             >
               <img
                 src="./images/salon-interior.jpg"

@@ -219,4 +219,28 @@ router.delete('/testimonials/:id', authMiddleware, (req, res) => {
   res.json({ success: true });
 });
 
+// --- GALLERY ---
+router.get('/gallery', (req, res) => {
+  res.json(db.getGallery(true));
+});
+
+router.get('/admin/gallery', authMiddleware, (req, res) => {
+  res.json(db.getGallery());
+});
+
+router.post('/gallery', authMiddleware, (req, res) => {
+  const item = db.addGalleryItem(req.body);
+  res.json({ id: item.id });
+});
+
+router.put('/gallery/:id', authMiddleware, (req, res) => {
+  db.updateGalleryItem(parseInt(req.params.id), req.body);
+  res.json({ success: true });
+});
+
+router.delete('/gallery/:id', authMiddleware, (req, res) => {
+  db.deleteGalleryItem(parseInt(req.params.id));
+  res.json({ success: true });
+});
+
 export default router;

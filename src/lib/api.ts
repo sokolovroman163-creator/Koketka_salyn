@@ -151,3 +151,19 @@ export const adminTestimonials = {
   update: (id: number, data: any) => apiPut('testimonials', id, data),
   delete: (id: number) => apiDelete('testimonials', id),
 };
+
+// Gallery
+export async function fetchGallery() {
+  const res = await fetch(`${API_BASE}/gallery`);
+  return res.json();
+}
+
+export const adminGallery = {
+  getAll: async () => {
+    const res = await fetch(`${API_BASE}/admin/gallery`, { headers: getAuthHeaders() });
+    return res.json();
+  },
+  create: (data: any) => apiPost('gallery', data),
+  update: (id: number, data: any) => apiPut('gallery', id, data),
+  delete: (id: number) => apiDelete('gallery', id),
+};
